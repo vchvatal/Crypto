@@ -3,10 +3,7 @@ package cz.engeto.crypto.controller;
 import cz.engeto.crypto.model.Crypto;
 import cz.engeto.crypto.model.Cryptos;
 import jakarta.websocket.server.PathParam;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -27,6 +24,15 @@ public class CryptoController {
     }
 
     /**
+     * Endpoint pro odstraneni kryptomeny
+     */
+    @DeleteMapping("cryptos/delete")
+    public Crypto removeCrypto(@RequestBody Crypto crypto) {
+        this.cryptos.removeCrypto(crypto);
+        return crypto;
+    }
+
+    /**
      * Endpoint pro vypis vsech kryptomen
      */
     @GetMapping("cryptos")
@@ -34,14 +40,14 @@ public class CryptoController {
         return this.cryptos.allCryptos();
     }
 
-//    /**
-//     * Endpoint pro vypis s defaultnim setridenim kryptomen.
-//     */
-//    @GetMapping("cryptos/sort")
-//    public List<Crypto> sortAllCryptos (@PathParam()) {
-//        this.cryptos.sortCryptos(null);
-//        return this.cryptos.allCryptos();
-//    }
+    /**
+     * Endpoint pro vypis s defaultnim setridenim kryptomen.
+     */
+    @GetMapping("cryptos/sort")
+    public List<Crypto> sortAllCryptos () {
+        this.cryptos.sortCryptos();
+        return this.cryptos.allCryptos();
+    }
 
 //    /**
 //     * Endpoint pro vypis s volitelnym setridenim kryptomen.

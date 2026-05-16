@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 public class Cryptos {
 
-    private List<Crypto> cryptos;
+    private final List<Crypto> cryptos;
 
     //region Constructors
     public Cryptos() {
@@ -53,12 +53,12 @@ public class Cryptos {
         this.cryptos.sort(null);
     }
 
-    /**
-     * Metoda pro volitelne setrideni kryptomen.
-     */
-    public void sortCryptos (Comparator<Crypto> comparator) {
-        this.cryptos.sort(comparator);
-    }
+//    /**
+//     * Metoda pro volitelne setrideni kryptomen.
+//     */
+//    public void sortCryptos (Comparator<Crypto> comparator) {
+//        this.cryptos.sort(comparator);
+//    }
 
     /**
      * Metoda pro vypis seznamu kryptomen

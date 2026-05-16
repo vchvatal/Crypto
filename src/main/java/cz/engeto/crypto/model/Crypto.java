@@ -1,5 +1,7 @@
 package cz.engeto.crypto.model;
 
+import java.util.Objects;
+
 public class Crypto implements Comparable<Crypto> {
 
     private Integer id; // unikátní identifikátor kryptoměny
@@ -61,20 +63,38 @@ public class Crypto implements Comparable<Crypto> {
     }
     //endregion Getters and Setters
 
-//    /**
-//     *
-//     */
-//    @Override
-//    public boolean equals(Crypto crypto) {
-//        if (this == crypto) return true;
-//        if (crypto == null || getClass() != crypto.getClass()) return false;
-//    }
+    /**
+     * Metoda pro porovnání kryptoměn
+     */
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Crypto crypto = (Crypto) object;
+        return Objects.equals(id, crypto.id) &&
+                Objects.equals(name, crypto.name) &&
+                Objects.equals(symbol, crypto.symbol) &&
+                Objects.equals(price, crypto.price) &&
+                Objects.equals(quantity, crypto.quantity);
+
+    }
+
+    /**
+     * Prepsani hashCode() kvuli souvislosti s equals()
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, symbol, price, quantity);
+    }
 
     /**
      * Vychozi razeni seznamu kryptomen je podle jmena
      */
     @Override
     public int compareTo(Crypto other) {
+        if (this.name == null && other.name == null) return 0;
+        if (this.name == null) return -1;
+        if (other.name == null) return 1;
         return this.name.compareTo(other.name);
     }
 
