@@ -1,81 +1,88 @@
 package cz.engeto.crypto.controller;
 
 import cz.engeto.crypto.model.Crypto;
-import cz.engeto.crypto.model.Cryptos;
-import jakarta.websocket.server.PathParam;
+import cz.engeto.crypto.service.CryptoService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @RestController
+@RequestMapping("/cryptos")
 public class CryptoController {
 
-    private final Cryptos cryptos = new Cryptos();
+    private final CryptoService cryptoService;
+
+    public CryptoController(CryptoService cryptoService) {
+        this.cryptoService = cryptoService;
+    }
 
     /**
      * Endpoint pro pridani kryptomeny
      */
-    @PostMapping("cryptos")
+    @PostMapping("")
     public Crypto addCrypto(@RequestBody Crypto crypto) {
-        this.cryptos.addCrypto(crypto);
+        this.cryptoService.addCrypto(crypto);
         return crypto;
     }
 
     /**
-     * Endpoint pro odstraneni kryptomeny
+     * Endpoint pro aktualizaci kryptomeny podle id
      */
-    @DeleteMapping("cryptos/delete")
-    public Crypto removeCrypto(@RequestBody Crypto crypto) {
-        this.cryptos.removeCrypto(crypto);
-        return crypto;
+    @PutMapping("/{id}")
+    public String updateCrypto(@PathVariable(value = "id") int idOfCrypto,
+                                               @RequestBody Crypto crypto) {
+        return this.cryptoService.updateCrypto(idOfCrypto, crypto);
     }
 
     /**
-     * Endpoint pro vypis vsech kryptomen
+     * Endpoint pro odstraneni kryptomeny (vcetne duplicit) podle celkove shody
      */
-    @GetMapping("cryptos")
-    public List<Crypto> allCryptos() {
-        return this.cryptos.allCryptos();
+    @DeleteMapping("/delete")
+    public String deleteCrypto(@RequestBody Crypto crypto) {
+        return this.cryptoService.deleteCrypto(crypto);
     }
 
     /**
-     * Endpoint pro vypis s defaultnim setridenim kryptomen.
+     * Endpoint pro odstraneni kryptomeny (vcetne duplicit) podle id
      */
-    @GetMapping("cryptos/sort")
-    public List<Crypto> sortAllCryptos () {
-        this.cryptos.sortCryptos();
-        return this.cryptos.allCryptos();
+    @DeleteMapping("/delete/{id}")
+    public String deleteCrypto(@PathVariable(value = "id") int idOfCrypto){
+        return this.cryptoService.deleteCrypto(idOfCrypto);
     }
 
-//    /**
-//     * Endpoint pro vypis s volitelnym setridenim kryptomen.
-//     */
-//    @GetMapping("cryptos/sort/")
-//    public List<Crypto> sortAllCryptos (Comparator<Crypto> comparator) {
-//        this.cryptos.sortCryptos(comparator);
-//        return this.cryptos.allCryptos();
-//    }
+    @GetMapping("/{id}")
+    public Crypto getCryptoById(@PathVariable(value = "id") int idOfCrypto){
+        return this.cryptoService.getCryptoById(idOfCrypto);
+    }
+
+    /**
+     * Endpoint pro vypis vsech kryptomen, volitelne setrideny podle name, price nebo quantity.
+     * /cryptos - bez razeni
+     */
+    @GetMapping("")
+    public List<Crypto> allCryptos(@RequestParam(value = "sort", required = false) String sortBy) {
+        if (sortBy != null) {
+            return this.cryptoService.getSortedCryptos(sortBy);
+        }
+        return this.cryptoService.getAllCryptos();
+    }
 
     /**
      * Endpoint pro inicializaci seznamu pro otestovani endpointu
      */
-    @GetMapping("cryptos/init")
+    @PostMapping("/init")
     public List<Crypto> initCryptos() {
-        this.cryptos.clearCryptos();
-        this.cryptos.addCrypto(new Crypto(1,"Bitcoin","BTC",78200.0,10.0));
-        this.cryptos.addCrypto(new Crypto(2,"Ethereum)","ETH",2180.0,60.0));
-        this.cryptos.addCrypto(new Crypto(3,"Cardano","ADA",0.2,150.0));
-        return this.cryptos.allCryptos();
+        this.cryptoService.clearCryptos();
+        this.cryptoService.initCryptos();
+        return this.cryptoService.getAllCryptos();
     }
 
     /**
      * Endpoint pro vyprazdneni seznamu
      */
-    @GetMapping("cryptos/clear")
+    @PostMapping("/clear")
     public List<Crypto> clearCryptos() {
-        this.cryptos.clearCryptos();
-        return this.cryptos.allCryptos();
+        this.cryptoService.clearCryptos();
+        return this.cryptoService.getAllCryptos();
     }
 }

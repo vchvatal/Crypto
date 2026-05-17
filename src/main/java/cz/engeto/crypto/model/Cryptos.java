@@ -33,32 +33,64 @@ public class Cryptos {
     }
 
     /**
-     * Metoda pro odebrani kryptomeny
+     * Metoda pro update kryptomeny podle id
      */
-    public void removeCrypto(Crypto crypto) {
-        this.cryptos.remove(crypto);
+    public String updateCrypto(int id, Crypto updatedCrypto) {
+        for (int i = 0; i < this.cryptos.size(); i++) {
+            if (this.cryptos.get(i).getId() == id) {
+                updatedCrypto.setId(id);
+                this.cryptos.set(i, updatedCrypto);
+                return "Kryptoměna byla upravena";
+            }
+        }
+        return "Kryptoměna v seznamu neexistuje";
+    }
+
+    /**
+     * Metoda pro odebrani vsech výskytu (vcetne duplicit) kryptomeny podle obsahu
+     */
+    public String deleteCrypto(Crypto crypto) {
+        if (this.cryptos.removeIf(c -> c.equals(crypto))) {
+            return "Kryptoměna smazána";
+        } else {
+            return "Kryptoměna v seznamu neexistuje";
+        }
+    }
+
+    /**
+     * Metoda pro odebrani vsech výskytu (vcetne duplicit) kryptomeny podle id
+     */
+    public String deleteCrypto(int id){
+        if (this.cryptos.removeIf(c -> c.getId() == id)) {
+            return "Kryptoměna smazána";
+        } else {
+            return "Kryptoměna v seznamu neexistuje";
+        }
     }
 
     /**
      * Metoda pro vypis vsech kryptomen
      */
     public List<Crypto> allCryptos() {
-        return new ArrayList<>(this.cryptos);
+        return this.cryptos;
     }
 
     /**
-     * Metoda pro defaultni setrideni kryptomen.
+     * Metoda pro získání kryptomeny podle id
      */
-    public void sortCryptos () {
-        this.cryptos.sort(null);
+    public Crypto getCryptoById(int id){
+        return cryptos.stream()
+                .filter(c -> c.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 
-//    /**
-//     * Metoda pro volitelne setrideni kryptomen.
-//     */
-//    public void sortCryptos (Comparator<Crypto> comparator) {
-//        this.cryptos.sort(comparator);
-//    }
+    /**
+     * Metoda pro volitelne setrideni kryptomen.
+     */
+    public void sortCryptos (Comparator<Crypto> comparator) {
+        this.cryptos.sort(comparator);
+    }
 
     /**
      * Metoda pro vypis seznamu kryptomen
