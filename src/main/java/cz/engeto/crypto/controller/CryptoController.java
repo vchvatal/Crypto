@@ -26,12 +26,40 @@ public class CryptoController {
     }
 
     /**
+     * Endpoint pro vraceni kryptomeny podle id
+     */
+    @GetMapping("/{id}")
+    public Crypto getCryptoById(@PathVariable(value = "id") int idOfCrypto){
+        return this.cryptoService.getCryptoById(idOfCrypto);
+    }
+
+    /**
      * Endpoint pro aktualizaci kryptomeny podle id
      */
     @PutMapping("/{id}")
     public String updateCrypto(@PathVariable(value = "id") int idOfCrypto,
                                                @RequestBody Crypto crypto) {
         return this.cryptoService.updateCrypto(idOfCrypto, crypto);
+    }
+
+    /**
+     * Endpoint pro vypis vsech kryptomen, volitelne setrideny podle name, price nebo quantity.
+     * /cryptos - bez razeni
+     */
+    @GetMapping("")
+    public List<Crypto> allCryptos(@RequestParam(value = "sort", required = false) String sortBy) {
+        if (sortBy != null) {
+            return this.cryptoService.getSortedCryptos(sortBy);
+        }
+        return this.cryptoService.getAllCryptos();
+    }
+
+    /**
+     * Endpoint pro vypocet celkove hodnoty portfolia
+     */
+    @GetMapping("/portfolio-value")
+    public Double getPortfolioValue() {
+        return this.cryptoService.getPortfolioValue();
     }
 
     /**
@@ -48,23 +76,6 @@ public class CryptoController {
     @DeleteMapping("/delete/{id}")
     public String deleteCrypto(@PathVariable(value = "id") int idOfCrypto){
         return this.cryptoService.deleteCrypto(idOfCrypto);
-    }
-
-    @GetMapping("/{id}")
-    public Crypto getCryptoById(@PathVariable(value = "id") int idOfCrypto){
-        return this.cryptoService.getCryptoById(idOfCrypto);
-    }
-
-    /**
-     * Endpoint pro vypis vsech kryptomen, volitelne setrideny podle name, price nebo quantity.
-     * /cryptos - bez razeni
-     */
-    @GetMapping("")
-    public List<Crypto> allCryptos(@RequestParam(value = "sort", required = false) String sortBy) {
-        if (sortBy != null) {
-            return this.cryptoService.getSortedCryptos(sortBy);
-        }
-        return this.cryptoService.getAllCryptos();
     }
 
     /**

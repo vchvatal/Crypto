@@ -68,6 +68,13 @@ public class CryptoService {
     }
 
     /**
+     * Sluzba pro vypocet celkove hodnoty portfolia
+     */
+    public Double getPortfolioValue() {
+        return this.cryptos.getPortfolioValue();
+    }
+
+    /**
      * Sluzba pro vymazani a naplneni seznamu testovacimi daty
      */
     public void initCryptos() {

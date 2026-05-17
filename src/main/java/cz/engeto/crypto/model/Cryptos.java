@@ -93,6 +93,15 @@ public class Cryptos {
     }
 
     /**
+     * Metoda pro vypocet celkove hodnoty portfolia
+     */
+    public Double getPortfolioValue() {
+        return this.cryptos.stream()
+                .mapToDouble(c -> c.getPrice() * c.getQuantity())
+                .sum();
+    }
+
+    /**
      * Metoda pro vypis seznamu kryptomen
      */
     public void printCryptos(String titul) {
